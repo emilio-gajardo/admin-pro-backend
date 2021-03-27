@@ -7,10 +7,22 @@ const { generarJWT } = require('../helpers/jwt'); // 1. importación para crear 
 
 
 const getUsuarios = async (req, res) => {
-    const usuarios = await Usuario.find({}, 'nombre email role');
+
+    const desde = Number(req.query.desde) || 0;
+    console.log('paginación desde -> ', desde);
+
+    // ambas promesas se ejecutan de forma simultanea
+    const [usuarios, total] = await Promise.all([
+        Usuario.find({}, 'nombre email role google img')
+                .skip(desde)
+                .limit(5),
+        Usuario.countDocuments()
+    ]);
+
     res.json({
         ok: true,
-        usuarios
+        usuarios,
+        total
     });
 }
 
@@ -29,16 +41,16 @@ const crearUsuario = async (req, res = response) => {
         }
 
         const usuario = new Usuario(req.body); // capturar los datos recibidos
-        
+
         // encriptación de contraseña
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt);
-        
+
         await usuario.save(); // guardar nuevo usuario en la BD
 
-    
+
         // 2. capturar el id del usuario y generar token
-        const token = await generarJWT(usuario.id); 
+        const token = await generarJWT(usuario.id);
 
         // 3. enviar token
         res.json({
