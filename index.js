@@ -20,6 +20,11 @@ dbConnection(); // Base de datos
 //console.log(process.env); // impresion de todas las variables de entorno de node
 
 
+/*------------------------------------------------*/
+// Directorio publico
+app.use(express.static('public'));
+/*------------------------------------------------*/
+
 // Rutas
 app.use('/api/usuarios', require('./routes/usuarios'));
 app.use('/api/login', require('./routes/auth'));
