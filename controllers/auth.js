@@ -102,4 +102,25 @@ const googleSingIn = async (req, res = response) => {
 }
 
 
-module.exports = { login, googleSingIn } // exportación
+
+// Renovar token
+const renewToken = async (req, res = response) => {
+
+    const uid = req.uid; // uid del usuario
+    const token = await generarJWT(uid); // Generar nuevo token
+
+    res.json({
+        ok: true,
+        token
+    });
+}
+
+
+
+
+
+module.exports = {
+    login,
+    googleSingIn,
+    renewToken
+} // exportación
