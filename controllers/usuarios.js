@@ -14,8 +14,8 @@ const getUsuarios = async (req, res) => {
     // ambas promesas se ejecutan de forma simultanea
     const [usuarios, total] = await Promise.all([
         Usuario.find({}, 'nombre email role google img')
-                .skip(desde)
-                .limit(5),
+            .skip(desde)
+            .limit(5),
         Usuario.countDocuments()
     ]);
 
@@ -102,7 +102,15 @@ const actualizarUsuario = async (req, res = response) => {
             }
         }
 
-        campos.email = email;
+        // solo se habilita el campo si el usuario no esta registrado con cuenta de google
+        if (!usuarioDB.google) {
+            campos.email = email;
+        } else if(usuarioDB.email !== email) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No es posible cambiar el email de un usuario de Google'
+            });
+        }
 
         const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
 
