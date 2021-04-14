@@ -9,7 +9,7 @@ const { generarJWT } = require('../helpers/jwt'); // 1. importación para crear 
 const getUsuarios = async (req, res) => {
 
     const desde = Number(req.query.desde) || 0;
-    console.log('paginación desde -> ', desde);
+    //console.log('paginación desde -> ', desde);
 
     // ambas promesas se ejecutan de forma simultanea
     const [usuarios, total] = await Promise.all([

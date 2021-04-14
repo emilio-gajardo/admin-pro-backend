@@ -5,17 +5,38 @@ const Medico = require('../models/medico');
 
 // listar médicos
 const getMedicos = async (req, res = response) => {
-
     const medicos = await Medico.find()
         //.populate('usuario', 'nombre img')
         .populate('hospital', 'nombre img');
-
     res.json({
         ok: true,
         medicos
     });
 }
 
+
+
+// retornar un médico
+const getMedicoById = async (req, res = response) => {
+
+    const id = req.params.id;
+    try {
+        const medico = await Medico.findById(id)
+            .populate('usuario', 'nombre img')
+            .populate('hospital', 'nombre img');
+        res.json({
+            ok: true,
+            medico
+        });
+    } catch (error) {
+        console.log(error);
+        
+        res.json({
+            ok: true,
+            msg: 'Falla al cargar datos del médico solicitado'
+        })
+    }
+}
 
 
 
@@ -143,5 +164,6 @@ module.exports = {
     getMedicos,
     crearMedico,
     actualizarMedico,
-    borrarMedico
+    borrarMedico,
+    getMedicoById
 }
