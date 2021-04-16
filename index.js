@@ -3,6 +3,7 @@
 // ============================================================================
 // importación de librerías
 require('dotenv').config(); // Integrar variables de entorno en node
+const path = require('path');
 const express = require('express');
 const { dbConnection } = require('./database/config');
 const app = express(); // Creación del servidor de express
@@ -32,6 +33,13 @@ app.use('/api/hospitales', require('./routes/hospitales'));
 app.use('/api/medicos', require('./routes/medicos'));
 app.use('/api/todo', require('./routes/busquedas'));
 app.use('/api/upload', require('./routes/uploads'));
+
+
+// manejador de rutas desplegadas
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
+
 
 
 app.listen(process.env.PORT, () => {
